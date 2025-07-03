@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Tech News</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font and general body */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .btn-primary {
+            background-color: #3b82f6; /* Blue */
+            color: #ffffff;
+        }
+        .btn-primary:hover {
+            background-color: #2563eb; /* Darker blue */
+        }
+        .btn-secondary {
+            background-color: #6b7280; /* Gray */
+            color: #ffffff;
+        }
+        .btn-secondary:hover {
+            background-color: #4b5563; /* Darker gray */
+        }
+        .btn-danger {
+            background-color: #ef4444; /* Red */
+            color: #ffffff;
+        }
+        .btn-danger:hover {
+            background-color: #dc2626; /* Darker red */
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db; /* Light gray border */
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            box-sizing: border-box; /* Include padding in width */
+        }
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+        .close-button {
+            color: #aaa;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container flex justify-between items-center">
+            <h1 class="text-3xl font-bold cursor-pointer" id="homeLink">Tech News by  Sanket</h1>
+            <nav class="flex space-x-4 items-center">
+                <button id="adminDashboardBtn" class="btn btn-secondary">Admin Dashboard</button>
+                <button id="logoutBtn" class="btn btn-secondary hidden">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container my-8">
+        <!-- News Feed Section -->
+        <section id="newsFeedPage" class="news-feed-page">
+            <h2 class="text-2xl font-semibold mb-6">News will be added soon</h2>
+            <div id="newsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- News articles will be dynamically loaded here -->
+            </div>
+        </section>
+
+        <!-- Login Page Section -->
+        <section id="loginPage" class="login-page hidden flex justify-center items-center h-96">
+            <div class="card w-full max-w-md">
+                <h2 class="text-2xl font-semibold mb-6 text-center">Admin Login</h2>
+                <form id="loginForm">
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                    <input type="text" id="username" placeholder="Username" class="form-input" required>
+
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="password" placeholder="Password" class="form-input" required>
+
+                    <button type="submit" class="btn btn-primary w-full">Login</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Admin Dashboard Section -->
+        <section id="adminDashboardPage" class="admin-dashboard-page hidden">
+            <h2 class="text-2xl font-semibold mb-6">Admin Dashboard</h2>
+
+            <!-- Add New Post Form -->
+            <div class="card mb-8">
+                <h3 class="text-xl font-semibold mb-4">Add New Post</h3>
+                <form id="addPostForm">
+                    <input type="text" id="postTitle" placeholder="Post Title" class="form-input" required>
+                    <input type="text" id="postAuthor" placeholder="Author Name" class="form-input" required>
+                    <input type="url" id="postImageUrl" placeholder="Image URL (optional)" class="form-input">
+                    <textarea id="postContent" placeholder="Post Content" class="form-input" rows="6" required></textarea>
+                    <button type="submit" class="btn btn-primary w-full">Add Post</button>
+                </form>
+            </div>
+
+            <!-- Manage Posts Section -->
+            <div class="card">
+                <h3 class="text-xl font-semibold mb-4">Manage Posts</h3>
+                <div id="managePostsContainer">
+                    <!-- Posts to manage will be dynamically loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Edit Post Modal -->
+    <div id="editPostModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h3 class="text-xl font-semibold mb-4">Edit Post</h3>
+            <form id="editPostForm">
+                <input type="hidden" id="editPostId">
+                <label for="editPostTitle" class="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                <input type="text" id="editPostTitle" class="form-input" required>
+
+                <label for="editPostAuthor" class="block text-sm font-medium text-gray-700 mb-1">Author</label>
+                <input type="text" id="editPostAuthor" class="form-input" required>
+
+                <label for="editPostImageUrl" class="block text-sm font-medium text-gray-700 mb-1">Image URL</label>
+                <input type="url" id="editPostImageUrl" class="form-input">
+
+                <label for="editPostContent" class="block text-sm font-medium text-gray-700 mb-1">Content</label>
+                <textarea id="editPostContent" class="form-input" rows="8" required></textarea>
+
+                <button type="submit" class="btn btn-primary w-full mt-4">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for dynamic content, page routing, and admin authentication
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const newsFeedPage = document.getElementById('newsFeedPage');
+            const loginPage = document.getElementById('loginPage');
+            const adminDashboardPage = document.getElementById('adminDashboardPage');
+            const adminDashboardBtn = document.getElementById('adminDashboardBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const homeLink = document.getElementById('homeLink');
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+
+            const newsContainer = document.getElementById('newsContainer');
+            const addPostForm = document.getElementById('addPostForm');
+            const managePostsContainer = document.getElementById('managePostsContainer');
+            const editPostModal = document.getElementById('editPostModal');
+            const closeButton = editPostModal.querySelector('.close-button');
+            const editPostForm = document.getElementById('editPostForm');
+
+            // Simulate database with localStorage for persistence
+            let posts = JSON.parse(localStorage.getItem('techNewsPosts')) || [];
+
+            // Hardcoded admin credentials for demonstration
+            const ADMIN_USERNAME = 'admin';
+            const ADMIN_PASSWORD = 'password';
+
+            // Function to check if admin is logged in
+            const isAdminLoggedIn = () => sessionStorage.getItem('adminLoggedIn') === 'true';
+
+            // Function to save posts to localStorage
+            const savePosts = () => {
+                localStorage.setItem('techNewsPosts', JSON.stringify(posts));
+            };
+
+            // Function to navigate between pages
+            const navigateTo = (page) => {
+                // Hide all pages first
+                newsFeedPage.classList.add('hidden');
+                loginPage.classList.add('hidden');
+                adminDashboardPage.classList.add('hidden');
+
+                // Update header buttons visibility
+                logoutBtn.classList.add('hidden');
+                adminDashboardBtn.textContent = 'Admin Dashboard'; // Reset button text
+
+                if (page === 'news') {
+                    newsFeedPage.classList.remove('hidden');
+                    renderNews();
+                    window.location.hash = '#news';
+                } else if (page === 'admin') {
+                    if (isAdminLoggedIn()) {
+                        adminDashboardPage.classList.remove('hidden');
+                        logoutBtn.classList.remove('hidden');
+                        adminDashboardBtn.textContent = 'View News Feed';
+                        renderManagePosts();
+                        window.location.hash = '#admin';
+                    } else {
+                        // If not logged in, redirect to login page
+                        navigateTo('login');
+                    }
+                } else if (page === 'login') {
+                    loginPage.classList.remove('hidden');
+                    window.location.hash = '#login';
+                }
+            };
+
+            // Function to render news articles on the main page
+            const renderNews = () => {
+                newsContainer.innerHTML = ''; // Clear existing news
+                if (posts.length === 0) {
+                    newsContainer.innerHTML = '<p class="text-gray-600 col-span-full text-center">No news posts available yet. Check back later!</p>';
+                    return;
+                }
+                posts.forEach(post => {
+                    const postElement = document.createElement('div');
+                    postElement.classList.add('card');
+                    postElement.innerHTML = `
+                        ${post.imageUrl ? `<img src="${post.imageUrl}" alt="${post.title}" class="rounded-t-lg mb-4 w-full h-48 object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=No+Image';">` : ''}
+                        <h3 class="text-xl font-bold mb-2">${post.title}</h3>
+                        <p class="text-gray-600 text-sm mb-3">By ${post.author} on ${new Date(post.date).toLocaleDateString()}</p>
+                        <p class="text-gray-800">${post.content.substring(0, 150)}...</p>
+                        <button class="text-blue-500 hover:underline mt-3 read-more-btn" data-id="${post.id}">Read More</button>
+                    `;
+                    newsContainer.appendChild(postElement);
+                });
+
+                // Add event listeners for "Read More" buttons
+                document.querySelectorAll('.read-more-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const postId = event.target.dataset.id;
+                        const post = posts.find(p => p.id === postId);
+                        if (post) {
+                            showMessage(`
+                                <h3 class="text-xl font-bold mb-2">${post.title}</h3>
+                                <p class="text-gray-600 text-sm mb-3">By ${post.author} on ${new Date(post.date).toLocaleDateString()}</p>
+                                ${post.imageUrl ? `<img src="${post.imageUrl}" alt="${post.title}" class="rounded-lg mb-4 w-full h-auto max-h-96 object-contain" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=No+Image';">` : ''}
+                                <p class="text-gray-800 whitespace-pre-wrap">${post.content}</p>
+                            `, 'Post Details');
+                        }
+                    });
+                });
+            };
+
+            // Function to render posts in the admin dashboard for management
+            const renderManagePosts = () => {
+                managePostsContainer.innerHTML = ''; // Clear existing posts
+                if (posts.length === 0) {
+                    managePostsContainer.innerHTML = '<p class="text-gray-600">No posts to manage yet. Add a new post above!</p>';
+                    return;
+                }
+                posts.forEach(post => {
+                    const postManageElement = document.createElement('div');
+                    postManageElement.classList.add('card', 'flex', 'justify-between', 'items-center', 'flex-wrap');
+                    postManageElement.innerHTML = `
+                        <div class="flex-1 min-w-0 pr-4 mb-2 md:mb-0">
+                            <h4 class="text-lg font-semibold">${post.title}</h4>
+                            <p class="text-gray-600 text-sm">By ${post.author}</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="btn btn-primary btn-sm edit-btn" data-id="${post.id}">Edit</button>
+                            <button class="btn btn-danger btn-sm delete-btn" data-id="${post.id}">Delete</button>
+                        </div>
+                    `;
+                    managePostsContainer.appendChild(postManageElement);
+                });
+
+                // Add event listeners for edit and delete buttons
+                document.querySelectorAll('.edit-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const postId = event.target.dataset.id;
+                        openEditModal(postId);
+                    });
+                });
+
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const postId = event.target.dataset.id;
+                        showConfirmDialog('Are you sure you want to delete this post?', () => deletePost(postId));
+                    });
+                });
+            };
+
+            // Event Listeners for Navigation
+            homeLink.addEventListener('click', () => navigateTo('news'));
+
+            adminDashboardBtn.addEventListener('click', () => {
+                if (isAdminLoggedIn()) {
+                    navigateTo('admin');
+                } else {
+                    navigateTo('login');
+                }
+            });
+
+            logoutBtn.addEventListener('click', () => {
+                sessionStorage.removeItem('adminLoggedIn');
+                showMessage('You have been logged out.', 'Logged Out');
+                navigateTo('news');
+            });
+
+            // Handle Login Form Submission
+            loginForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const username = usernameInput.value;
+                const password = passwordInput.value;
+
+                if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                    sessionStorage.setItem('adminLoggedIn', 'true');
+                    showMessage('Login successful!', 'Success');
+                    navigateTo('admin');
+                } else {
+                    showMessage('Invalid username or password.', 'Login Failed', 'error');
+                }
+                loginForm.reset(); // Clear login form
+            });
+
+            // Handle Add New Post Form Submission
+            addPostForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                if (!isAdminLoggedIn()) {
+                    showMessage('You must be logged in to add posts.', 'Access Denied', 'error');
+                    return;
+                }
+                const newPost = {
+                    id: crypto.randomUUID(), // Generate a unique ID
+                    title: document.getElementById('postTitle').value,
+                    author: document.getElementById('postAuthor').value,
+                    imageUrl: document.getElementById('postImageUrl').value,
+                    content: document.getElementById('postContent').value,
+                    date: new Date().toISOString() // Current date
+                };
+                posts.push(newPost);
+                savePosts();
+                addPostForm.reset(); // Clear the form
+                showMessage('Post added successfully!', 'Success');
+                renderNews(); // Update news feed
+                renderManagePosts(); // Update manage posts in dashboard
+            });
+
+            // Open Edit Post Modal
+            const openEditModal = (postId) => {
+                if (!isAdminLoggedIn()) {
+                    showMessage('You must be logged in to edit posts.', 'Access Denied', 'error');
+                    return;
+                }
+                const post = posts.find(p => p.id === postId);
+                if (post) {
+                    document.getElementById('editPostId').value = post.id;
+                    document.getElementById('editPostTitle').value = post.title;
+                    document.getElementById('editPostAuthor').value = post.author;
+                    document.getElementById('editPostImageUrl').value = post.imageUrl;
+                    document.getElementById('editPostContent').value = post.content;
+                    editPostModal.style.display = 'flex'; // Show modal
+                }
+            };
+
+            // Close Edit Post Modal
+            closeButton.addEventListener('click', () => {
+                editPostModal.style.display = 'none';
+            });
+
+            // Close modal if clicked outside content
+            window.addEventListener('click', (event) => {
+                if (event.target === editPostModal) {
+                    editPostModal.style.display = 'none';
+                }
+            });
+
+            // Handle Edit Post Form Submission
+            editPostForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                if (!isAdminLoggedIn()) {
+                    showMessage('You must be logged in to save changes.', 'Access Denied', 'error');
+                    return;
+                }
+                const postId = document.getElementById('editPostId').value;
+                const postIndex = posts.findIndex(p => p.id === postId);
+
+                if (postIndex > -1) {
+                    posts[postIndex].title = document.getElementById('editPostTitle').value;
+                    posts[postIndex].author = document.getElementById('editPostAuthor').value;
+                    posts[postIndex].imageUrl = document.getElementById('editPostImageUrl').value;
+                    posts[postIndex].content = document.getElementById('editPostContent').value;
+                    savePosts();
+                    showMessage('Post updated successfully!', 'Success');
+                    editPostModal.style.display = 'none'; // Hide modal
+                    renderNews(); // Update news feed
+                    renderManagePosts(); // Update manage posts in dashboard
+                } else {
+                    showMessage('Error: Post not found.', 'Error');
+                }
+            });
+
+            // Delete Post Function
+            const deletePost = (postId) => {
+                if (!isAdminLoggedIn()) {
+                    showMessage('You must be logged in to delete posts.', 'Access Denied', 'error');
+                    return;
+                }
+                posts = posts.filter(post => post.id !== postId);
+                savePosts();
+                showMessage('Post deleted successfully!', 'Success');
+                renderNews(); // Update news feed
+                renderManagePosts(); // Update manage posts in dashboard
+            };
+
+            // Custom Message Box Function (replaces alert/confirm)
+            const showMessage = (message, title = 'Notification', type = 'info', callback = null) => {
+                const modalId = 'messageModal';
+                let modal = document.getElementById(modalId);
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = modalId;
+                    modal.classList.add('modal');
+                    modal.innerHTML = `
+                        <div class="modal-content">
+                            <span class="close-button">&times;</span>
+                            <h3 class="text-xl font-semibold mb-4" id="messageModalTitle"></h3>
+                            <div id="messageModalBody" class="mb-4"></div>
+                            <button id="messageModalOkBtn" class="btn btn-primary w-full"></button>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                }
+
+                document.getElementById('messageModalTitle').textContent = title;
+                document.getElementById('messageModalBody').innerHTML = message;
+                document.getElementById('messageModalOkBtn').textContent = 'OK';
+
+                const modalCloseBtn = modal.querySelector('.close-button');
+                const modalOkBtn = document.getElementById('messageModalOkBtn');
+
+                const closeModal = () => {
+                    modal.style.display = 'none';
+                    modalCloseBtn.removeEventListener('click', closeModal);
+                    modalOkBtn.removeEventListener('click', closeModal);
+                    if (callback) callback();
+                };
+
+                modalCloseBtn.addEventListener('click', closeModal);
+                modalOkBtn.addEventListener('click', closeModal);
+
+                modal.style.display = 'flex';
+            };
+
+            // Custom Confirmation Dialog Function (replaces confirm)
+            const showConfirmDialog = (message, onConfirm, onCancel = null) => {
+                const modalId = 'confirmModal';
+                let modal = document.getElementById(modalId);
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = modalId;
+                    modal.classList.add('modal');
+                    modal.innerHTML = `
+                        <div class="modal-content">
+                            <span class="close-button">&times;</span>
+                            <h3 class="text-xl font-semibold mb-4">Confirmation</h3>
+                            <div id="confirmModalBody" class="mb-4"></div>
+                            <div class="flex justify-end space-x-2">
+                                <button id="confirmModalCancelBtn" class="btn btn-secondary">Cancel</button>
+                                <button id="confirmModalOkBtn" class="btn btn-danger">Confirm</button>
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                }
+
+                document.getElementById('confirmModalBody').textContent = message;
+
+                const modalCloseBtn = modal.querySelector('.close-button');
+                const confirmOkBtn = document.getElementById('confirmModalOkBtn');
+                const confirmCancelBtn = document.getElementById('confirmModalCancelBtn');
+
+                const closeConfirmModal = () => {
+                    modal.style.display = 'none';
+                    modalCloseBtn.removeEventListener('click', closeConfirmModal);
+                    confirmOkBtn.removeEventListener('click', handleConfirm);
+                    confirmCancelBtn.removeEventListener('click', handleCancel);
+                };
+
+                const handleConfirm = () => {
+                    closeConfirmModal();
+                    if (onConfirm) onConfirm();
+                };
+
+                const handleCancel = () => {
+                    closeConfirmModal();
+                    if (onCancel) onCancel();
+                };
+
+                modalCloseBtn.addEventListener('click', closeConfirmModal);
+                confirmOkBtn.addEventListener('click', handleConfirm);
+                confirmCancelBtn.addEventListener('click', handleCancel);
+
+                modal.style.display = 'flex';
+            };
+
+            // Initial page load based on URL hash or default to news
+            const initialHash = window.location.hash.substring(1); // Remove '#'
+            if (initialHash === 'admin' && !isAdminLoggedIn()) {
+                navigateTo('login'); // If trying to access admin and not logged in, go to login
+            } else if (initialHash === 'admin' && isAdminLoggedIn()) {
+                navigateTo('admin');
+            } else if (initialHash === 'login') {
+                navigateTo('login');
+            } else {
+                navigateTo('news'); // Default to news feed
+            }
+        });
+    </script>
+</body>
+</html>
